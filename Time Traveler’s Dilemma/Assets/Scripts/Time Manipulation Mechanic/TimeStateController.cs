@@ -85,5 +85,4 @@ public class TimeStateController : MonoBehaviour
         _currentState = newState;
         _currentState.EnterState();
     }
-
 }

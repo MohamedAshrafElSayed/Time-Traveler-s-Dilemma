@@ -43,6 +43,7 @@ public class TimeAffectable : MonoBehaviour
             StateAtTime _stateAtTime = _stateHistory[0];
             transform.position = _stateAtTime.position;
             transform.rotation = _stateAtTime.rotation;
+
             _stateHistory.RemoveAt(0);
         }
     }
