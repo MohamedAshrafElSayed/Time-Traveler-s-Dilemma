@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -64,6 +63,7 @@ public class TimeStateController : MonoBehaviour
         }
     }
 
+    // To add all the objects affected by time manipulation in a list.
     private void FindAllTimeAffectableObjects()
     {
         timeAffectables.Clear();

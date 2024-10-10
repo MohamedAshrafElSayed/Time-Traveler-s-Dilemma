@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public float jumpForce = 7f;
+    public float moveSpeed = 10f;
+    public float jumpForce = 10f;
 
     private Rigidbody _rigidbody;
     private bool _isGrounded;
@@ -15,14 +13,22 @@ public class PlayerController : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    private void Update()
     {
+        // To restrict the player movement when in pause or rewinding.
         if (TimeStateController.Instance.IsRecordable())
         {
+            if (_rigidbody.isKinematic != false)
+            {
+                _rigidbody.isKinematic = false;
+            }
+
             MovePlayer();
+
             if (Input.GetButtonDown("Jump") && _isGrounded)
             {
                 Jump();
+                Physics.gravity = new Vector3(0f, -20f, 0f);
             }
         }
     }
@@ -44,6 +50,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
+            Physics.gravity = new Vector3(0f, -9.8f, 0f);
             _isGrounded = true; 
         }
     }
