@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FastForwardState : ITimeState
@@ -17,10 +15,7 @@ public class FastForwardState : ITimeState
         Time.timeScale = 2.0f;
     }
 
-    public void UpdateState()
-    {
-
-    }
+    public void UpdateState() {}
 
     public void ExitState()
     {

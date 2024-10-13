@@ -5,6 +5,7 @@ public class TimeStateController : MonoBehaviour
 {
     public static TimeStateController Instance;
     private ITimeState _currentState;
+    private bool _hasRewound = false;
 
     [HideInInspector]
     public List<TimeAffectable> timeAffectables = new List<TimeAffectable>();
@@ -27,8 +28,6 @@ public class TimeStateController : MonoBehaviour
     private void Start()
     {
         SetState(normalState);
-
-        FindAllTimeAffectableObjects();
     }
 
     private void Update()
@@ -63,20 +62,36 @@ public class TimeStateController : MonoBehaviour
         }
     }
 
-    // To add all the objects affected by time manipulation in a list.
-    private void FindAllTimeAffectableObjects()
+    // To only register objects visible to the player.
+    public void RegisterAffectable(TimeAffectable obj)
     {
-        timeAffectables.Clear();
-        TimeAffectable[] affectableObjects = FindObjectsOfType<TimeAffectable>();
-
-        foreach (TimeAffectable obj in affectableObjects)
+        if (!timeAffectables.Contains(obj))
         {
             timeAffectables.Add(obj);
         }
     }
 
+    public void UnregisterAffectable(TimeAffectable obj)
+    {
+        if (timeAffectables.Contains(obj))
+        {
+            timeAffectables.Remove(obj);
+        }
+    }
+
     public void SetState(ITimeState newState)
     {
+        if (_currentState == rewindState)
+        {
+            _hasRewound = true;
+        }
+
+        if (newState == fastForwardState && !_hasRewound)
+        {
+            Debug.Log("Cannot Fast Forward without Rewind.");
+            return;
+        }
+
         if (_currentState != null)
         {
             _currentState.ExitState();
@@ -84,5 +99,10 @@ public class TimeStateController : MonoBehaviour
 
         _currentState = newState;
         _currentState.EnterState();
+
+        if (_currentState == normalState)
+        {
+            _hasRewound = false;
+        }
     }
 }
