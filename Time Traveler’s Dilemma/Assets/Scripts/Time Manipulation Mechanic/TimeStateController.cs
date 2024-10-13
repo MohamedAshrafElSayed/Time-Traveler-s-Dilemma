@@ -36,10 +36,10 @@ public class TimeStateController : MonoBehaviour
         HandleTimeInput();
     }
 
-    //To ensure only recording the position when the time is moving forward (Time.timeScale > 0) and we're not in rewind mode
+    //To ensure only recording the position when the time is in normal state (Time.timeScale = 1).
     public bool IsRecordable()
     {
-        return _currentState == normalState || _currentState == fastForwardState;
+        return _currentState == normalState;
     }
 
     private void HandleTimeInput()

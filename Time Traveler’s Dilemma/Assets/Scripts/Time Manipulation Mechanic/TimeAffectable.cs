@@ -5,6 +5,7 @@ public class TimeAffectable : MonoBehaviour
 {
     private List<StateAtTime> _stateHistory = new List<StateAtTime>();
     private bool _isInCameraView = false;
+    private int _rewindIndex = 0;
 
     void Start()
     {
@@ -62,18 +63,39 @@ public class TimeAffectable : MonoBehaviour
         {
             _stateHistory.RemoveAt(_stateHistory.Count - 1);
         }
+
+        _rewindIndex = 0;
     }
 
     public void Rewind()
     {   
-        if (_stateHistory.Count > 0)
+        if (_stateHistory.Count > 0 && _rewindIndex < _stateHistory.Count)
         {
-            StateAtTime _stateAtTime = _stateHistory[0];
+            StateAtTime _stateAtTime = _stateHistory[_rewindIndex];
             transform.position = _stateAtTime.position;
             transform.rotation = _stateAtTime.rotation;
             gameObject.SetActive(_stateAtTime.active);
 
-            _stateHistory.RemoveAt(0);
+            _rewindIndex++;
         }
+    }
+
+    public void FastForward()
+    {
+        if (_rewindIndex > 0)
+        {
+            _rewindIndex--;
+
+            StateAtTime _stateAtTime = _stateHistory[_rewindIndex];
+            transform.position = _stateAtTime.position;
+            transform.rotation = _stateAtTime.rotation;
+            gameObject.SetActive(_stateAtTime.active);
+        }
+    }
+
+    // To check if the object finished fast forward or not 
+    public bool HasMoreFastForwardStates()
+    {
+        return _rewindIndex > 0;
     }
 }
