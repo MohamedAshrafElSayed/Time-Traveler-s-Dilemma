@@ -3,19 +3,15 @@ using UnityEngine;
 public class RewindState : ITimeState
 {
     private TimeStateController _controller;
-    private float rewindDuration = 15f;
-    private float rewindTimer = 0f;
 
     public RewindState(TimeStateController controller)
     {
         _controller = controller;
-        rewindDuration = _controller.rewindTime;
     }
 
     public void EnterState()
     {
         Debug.Log("Entered Rewind State");
-        rewindTimer = rewindDuration;
     }
 
     public void UpdateState()
@@ -24,8 +20,8 @@ public class RewindState : ITimeState
         {
             obj.Rewind();
         }
-        rewindTimer -= Time.deltaTime;
-        if (rewindTimer <= 0)
+        
+        if (AllObjectsFullyRewinded())
         {
             _controller.SetState(_controller.pausedState);
         }  
@@ -34,5 +30,18 @@ public class RewindState : ITimeState
     public void ExitState()
     {
         Debug.Log("Exited Rewind State");
+    }
+
+    // To Check if all objects finished fastforwarding.
+    private bool AllObjectsFullyRewinded()
+    {
+        foreach (TimeAffectable obj in _controller.timeAffectables)
+        {
+            if (obj.HasMoreRewindStates())
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

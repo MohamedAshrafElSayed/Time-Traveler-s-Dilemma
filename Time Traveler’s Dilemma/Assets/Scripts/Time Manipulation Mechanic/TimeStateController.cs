@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TimeStateController : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class TimeStateController : MonoBehaviour
     [HideInInspector]
     public List<TimeAffectable> timeAffectables = new List<TimeAffectable>();
     public float rewindTime = 15f;
+    public UnityEvent _onRewind = new UnityEvent();
 
     public ITimeState pausedState;
     public ITimeState fastForwardState;
@@ -102,6 +104,10 @@ public class TimeStateController : MonoBehaviour
 
         if (_currentState == normalState)
         {
+            if (_hasRewound)
+            {
+                _onRewind.Invoke();
+            }
             _hasRewound = false;
         }
     }

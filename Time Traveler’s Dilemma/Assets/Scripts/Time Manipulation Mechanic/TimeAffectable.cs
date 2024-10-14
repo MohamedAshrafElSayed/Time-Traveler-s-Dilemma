@@ -3,13 +3,16 @@ using UnityEngine;
 
 public class TimeAffectable : MonoBehaviour
 {
-    private List<StateAtTime> _stateHistory = new List<StateAtTime>();
-    private bool _isInCameraView = false;
-    private int _rewindIndex = 0;
+    protected List<StateAtTime> _stateHistory = new List<StateAtTime>();
+    private bool _isInCameraView = true;
+    protected int _rewindIndex = 0;
 
-    void Start()
+    protected virtual void Start()
     {
         Register();
+
+        // Clears the list after rewind finishes.
+        TimeStateController.Instance._onRewind.AddListener(ClearHistory);
     }
 
     private void Register()
@@ -47,7 +50,7 @@ public class TimeAffectable : MonoBehaviour
         }
     }
 
-    private void Record()
+    protected virtual void Record()
     {
         // To check if there is any significant change happened or not before recording
         if (_stateHistory.Count == 0 ||
@@ -67,7 +70,7 @@ public class TimeAffectable : MonoBehaviour
         _rewindIndex = 0;
     }
 
-    public void Rewind()
+    public virtual void Rewind()
     {   
         if (_stateHistory.Count > 0 && _rewindIndex < _stateHistory.Count)
         {
@@ -80,7 +83,7 @@ public class TimeAffectable : MonoBehaviour
         }
     }
 
-    public void FastForward()
+    public virtual void FastForward()
     {
         if (_rewindIndex > 0)
         {
@@ -93,9 +96,20 @@ public class TimeAffectable : MonoBehaviour
         }
     }
 
+    private void ClearHistory()
+    {
+        _stateHistory.Clear();
+    }
+
     // To check if the object finished fast forward or not 
     public bool HasMoreFastForwardStates()
     {
         return _rewindIndex > 0;
+    }
+
+    // To check if the object finished rewind or not 
+    public bool HasMoreRewindStates()
+    {
+        return _rewindIndex < _stateHistory.Count;
     }
 }

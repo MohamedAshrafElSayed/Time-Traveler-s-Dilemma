@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     {
         resultText.text = "You Lose!";
         Debug.Log("Game Over!");
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
     }
 
@@ -29,13 +29,13 @@ public class GameManager : MonoBehaviour
     {
         resultText.text = "You Win!";
         Debug.Log("You Win!");
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         Application.Quit();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             PlayerFell();
         }
